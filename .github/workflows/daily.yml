@@ -1,0 +1,29 @@
+name: Daily alerts
+
+on:
+  schedule:
+    - cron: '0 5 * * *' # 08:00 Israel summer time / 07:00 winter
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-alerts
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Send daily digest + cleanup
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: node scripts/daily.mjs

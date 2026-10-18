@@ -1,0 +1,33 @@
+/* Print — renders the tachograph sheet like the paper form (A4 landscape). */
+@page { size: A4 landscape; margin: 10mm; }
+
+body { background: #fff !important; font-size: 11pt; }
+body::before, .sidenav, .tabbar, .page-head, .toolbar, .save-bar, .print-hide,
+.tacho-head, .tacho-stats, .ios-banner, .toast, .sheet-wrap, .tacho-stats .chip { display: none !important; }
+.print-only { display: block !important; }
+.view { margin: 0 !important; padding: 0 !important; max-width: none !important; animation: none !important; }
+.card { box-shadow: none !important; border: 0 !important; padding: 0 !important; }
+
+.tacho-sheet > * { padding: 0 !important; }
+.print-title { font-size: 16pt; text-align: center; margin: 0 0 4mm; }
+.plate { font-size: 14pt; }
+.tacho-scroll { overflow: visible !important; border: 0 !important; }
+.tacho-grid { width: 100%; table-layout: fixed; border: 1.2pt solid #000; font-size: 8.5pt; }
+.tacho-grid th, .tacho-grid td { border-left: .6pt solid #000 !important; border-bottom: .6pt solid #000 !important; background: #fff !important; }
+.tacho-grid .row-label { position: static; width: 16mm; min-width: 0; box-shadow: none; color: #000; font-size: 9pt; }
+.day-num { min-width: 0; height: 9mm; }
+.day-num small { font-size: 6.5pt; color: #333; }
+.tacho-grid td button { width: 100%; height: 11mm; color: #000 !important; background: none !important; font-size: 8pt; }
+.tacho-grid td button:disabled { background: none !important; }
+.tacho-grid .is-today { background: #fff !important; }
+.day-num.is-today b { color: #000 !important; }
+.note-dot { width: 5pt; height: 5pt; background: #000; }
+.ic.mark { width: 14pt; height: 14pt; stroke-width: 2.6; }
+.print-notes { margin: 3mm 0 0; padding: 0 5mm 0 0; font-size: 9pt; }
+.tacho-help { display: none !important; }
+.signature-box { margin-top: 6mm; flex-direction: row !important; align-items: flex-end; gap: 8mm; break-inside: avoid; }
+.signature-box h3 { font-size: 11pt; }
+.sig-img { max-width: 60mm; border: 0; border-bottom: .8pt solid #000; border-radius: 0; }
+.sig-pad { height: 22mm; width: 70mm; border: 0; border-bottom: .8pt solid #000; border-radius: 0; }
+.sig-hint { display: none; }
+* { animation: none !important; transition: none !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
