@@ -117,9 +117,13 @@ export async function render(root, [idParam], query) {
         const wasNew = !id;
         id = saved.id;
         // Update the vehicle's current km if this service shows a higher reading
+        // and its next-service km when this service sets one
         const veh = vehicleById(row.vehicle_id);
-        if (veh && row.km != null && (veh.current_km == null || row.km > veh.current_km)) {
-          await saveRow('vehicles', { id: veh.id, current_km: row.km });
+        const patch = {};
+        if (veh && row.km != null && (veh.current_km == null || row.km > veh.current_km)) patch.current_km = row.km;
+        if (veh && row.next_km != null && row.next_km !== veh.next_service_km) patch.next_service_km = row.next_km;
+        if (Object.keys(patch).length) {
+          await saveRow('vehicles', { id: veh.id, ...patch });
           await load('vehicles');
         }
         await load('services');

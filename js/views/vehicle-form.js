@@ -46,6 +46,7 @@ export async function render(root, [idParam], query) {
           <label class="field"><span>שנה</span><input class="input" name="year" type="number" inputmode="numeric" min="1950" max="${thisYear + 1}" value="${esc(v?.year)}"></label>
           <label class="field"><span>מספר מקומות</span><input class="input" name="seats" type="number" inputmode="numeric" min="1" max="120" value="${esc(v?.seats)}"></label>
           <label class="field"><span>ק"מ נוכחי</span><input class="input" name="current_km" type="number" inputmode="numeric" min="0" value="${esc(v?.current_km)}"></label>
+          <label class="field"><span>טיפול הבא בק"מ</span><input class="input" name="next_service_km" type="number" inputmode="numeric" min="1" value="${esc(v?.next_service_km)}"></label>
           <label class="field"><span>נהג קבוע</span>
             <select class="input" name="default_driver_id">${selectOptions(drivers, v?.default_driver_id, { empty: 'ללא' })}</select>
           </label>
@@ -112,6 +113,8 @@ export async function render(root, [idParam], query) {
     if (form.seats.value && (seats == null || seats < 1 || seats > 120)) errors.seats = 'מספר מקומות לא תקין';
     const km = intOrNull(form.current_km.value);
     if (form.current_km.value && (km == null || km < 0)) errors.current_km = 'ק"מ לא תקין';
+    const nkm = intOrNull(form.next_service_km.value);
+    if (form.next_service_km.value && (nkm == null || nkm <= 0)) errors.next_service_km = 'ק"מ לא תקין';
     return showErrors(form, errors);
   }
 
@@ -131,6 +134,7 @@ export async function render(root, [idParam], query) {
           year: intOrNull(form.year.value),
           seats: intOrNull(form.seats.value),
           current_km: intOrNull(form.current_km.value),
+          next_service_km: intOrNull(form.next_service_km.value),
           default_driver_id: form.default_driver_id.value || null,
           notes: strOrNull(form.notes.value),
           active: form.active.checked,
