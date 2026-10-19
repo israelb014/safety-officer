@@ -39,7 +39,7 @@ export function render(root, _params, query) {
             : '—'}</b>${next?.nextDate ? `<small>${daysText(next.daysLeft)}</small>` : ''}</div>
         </div>
       </section>` : ''}
-    <div class="${veh ? 'timeline' : 'grid'} list">
+    <div class="${veh && list.length ? 'timeline' : 'grid'} list">
       ${list.length ? list.map((s) => (veh ? timelineItem(s) : card(s))).join('')
         : emptyState('wrench', 'אין טיפולים רשומים', '', `<a class="btn btn-primary" href="#/service/new${vehicleId ? `?vehicle=${vehicleId}` : ''}">${icon('plus')} רישום טיפול</a>`)}
     </div>`;

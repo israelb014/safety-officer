@@ -85,11 +85,19 @@ async function route() {
   try {
     await view.render(root, params, query);
     if (view === dashboard) iosBanner(root);
+    root.querySelectorAll('textarea.input').forEach(autosize);
   } catch (e) {
     console.error(e);
     root.innerHTML = `<div class="card error-card">${icon('alert', 32)}<p>${esc(errText(e))}</p><button class="btn btn-primary" onclick="location.reload()">טעינה מחדש</button></div>`;
   }
 }
+
+// Text areas grow with their content (e.g. multi-line vehicle notes)
+function autosize(t) {
+  t.style.height = 'auto';
+  t.style.height = `${t.scrollHeight + 3}px`;
+}
+document.addEventListener('input', (e) => { if (e.target.matches?.('textarea.input')) autosize(e.target); });
 
 // ---------- shell ----------
 function shellHtml() {

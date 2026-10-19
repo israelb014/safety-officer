@@ -138,7 +138,7 @@ css/                  עיצוב + הדפסה
 js/items.js           סוגי הפריטים, תוויות וחישובי סטטוס (משותף לאתר ולסקריפט היומי)
 js/views/             המסכים
 supabase/schema.sql   מסד הנתונים, הרשאות ואחסון
-scripts/daily.mjs     ההתראה היומית + ניקוי מסמכים ישנים (Node 20, בלי תלויות)
+scripts/daily.mjs     ההתראה היומית + ניקוי מסמכים ישנים (Node 22, בלי תלויות)
 .github/workflows/daily.yml
 tests/                בדיקת עשן מקומית עם Supabase מדומה (לא נדרש בייצור)
 ```
