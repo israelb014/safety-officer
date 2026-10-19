@@ -25,6 +25,7 @@ create table if not exists public.vehicles (
   year int,
   seats int,
   current_km int,
+  next_service_km int,
   default_driver_id uuid,
   notes text,
   active boolean not null default true,
@@ -32,6 +33,9 @@ create table if not exists public.vehicles (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- added in v2.1 (safe on existing projects)
+alter table public.vehicles add column if not exists next_service_km int;
 
 -- ---------- drivers ----------
 create table if not exists public.drivers (

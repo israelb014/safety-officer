@@ -8,6 +8,10 @@ export const VEHICLE_ITEMS = [
   { key: 'insurance_comprehensive', label: "ביטוח מקיף / צד ג'" },
   { key: 'fire_extinguisher', label: 'מטף כיבוי אש' },
   { key: 'winter_check', label: 'בדיקת חורף' },
+  { key: 'brakes_check', label: 'בדיקת בלמים', hint: 'כל 6 חודשים' },
+  { key: 'child_reminder_system', label: 'אישור מערכת שכחת ילדים' },
+  { key: 'quarterly_approval', label: 'אישור תלת חודשי' },
+  { key: 'training_approval', label: 'אישור הדרכה קיץ/חורף' },
 ];
 
 // Shown only when vehicle_type === 'bus'
@@ -23,8 +27,13 @@ export const BUS_ITEMS = [
 export const DRIVER_ITEMS = [
   { key: 'driving_license', label: 'רישיון נהיגה' },
   { key: 'police_clearance', label: 'אישור משטרה' },
-  { key: 'training_summer', label: 'אישור הדרכה קיץ' },
-  { key: 'training_winter', label: 'אישור הדרכה חורף' },
+];
+
+// Retired items: old rows may still exist in the DB. They keep a label (for old documents)
+// but are no longer shown in forms, the dashboard or alerts.
+const RETIRED_ITEMS = [
+  { key: 'training_summer', label: 'אישור הדרכה קיץ (נהג)' },
+  { key: 'training_winter', label: 'אישור הדרכה חורף (נהג)' },
 ];
 
 // Document slots that are not expiry items
@@ -56,7 +65,7 @@ export const EXPIRING_WINDOW = 30; // days — orange threshold
 export const DEFAULT_SERVICE_DAYS = 14;
 export const DEFAULT_SERVICE_KM = 1000;
 
-const ALL = [...VEHICLE_ITEMS, ...BUS_ITEMS, ...DRIVER_ITEMS, ...EXTRA_SLOTS];
+const ALL = [...VEHICLE_ITEMS, ...BUS_ITEMS, ...DRIVER_ITEMS, ...EXTRA_SLOTS, ...RETIRED_ITEMS];
 const LABELS = Object.fromEntries(ALL.map((i) => [i.key, i.label]));
 
 export function labelOf(key) {
@@ -172,18 +181,22 @@ export function collectExpiries({ vehicles, drivers, expiry, today = todayISO() 
   return out;
 }
 
-/** Latest "next service" info per vehicle. */
+/**
+ * "Next service" info per vehicle: km from the vehicle's own next_service_km field
+ * (falls back to the latest service's next_km), date from the latest service's next_date.
+ */
 export function nextServiceFor(vehicle, services, today = todayISO(),
   limits = { days: DEFAULT_SERVICE_DAYS, km: DEFAULT_SERVICE_KM }) {
-  const list = services
-    .filter((s) => s.vehicle_id === vehicle.id && (s.next_date || s.next_km))
-    .sort((a, b) => (b.service_date || '').localeCompare(a.service_date || ''));
-  const s = list[0];
-  if (!s) return null;
-  const daysLeft = s.next_date ? daysBetween(today, s.next_date) : null;
-  const kmLeft = s.next_km != null && vehicle.current_km != null ? s.next_km - vehicle.current_km : null;
+  const s = services
+    .filter((x) => x.vehicle_id === vehicle.id && (x.next_date || x.next_km))
+    .sort((a, b) => (b.service_date || '').localeCompare(a.service_date || ''))[0] || null;
+  const nextKm = vehicle.next_service_km ?? s?.next_km ?? null;
+  const nextDate = s?.next_date || null;
+  if (nextKm == null && !nextDate) return null;
+  const daysLeft = nextDate ? daysBetween(today, nextDate) : null;
+  const kmLeft = nextKm != null && vehicle.current_km != null ? nextKm - vehicle.current_km : null;
   const due = (daysLeft != null && daysLeft <= limits.days) || (kmLeft != null && kmLeft <= limits.km);
-  return { service: s, nextDate: s.next_date, nextKm: s.next_km, daysLeft, kmLeft, due };
+  return { service: s, nextDate, nextKm, daysLeft, kmLeft, due };
 }
 
 /** Days of the current month (1..yesterday) with no check mark. */
