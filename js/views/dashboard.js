@@ -115,7 +115,7 @@ function dueCard(e) {
         <div class="item-text">
           <h3>${esc(e.label)}</h3>
           <div class="item-owner">${e.ownerType === 'vehicle' ? plateBox(e.ownerName, true) : `${icon('user', 18)} <b>${esc(e.ownerName)}</b>`}</div>
-          <p class="item-date"><b class="nowrap">${daysText(e.days)}</b> <span class="nowrap">· ${fmtDate(e.date)}</span></p>
+          <p class="item-date"><b>${daysText(e.days)}</b>${fmtDate(e.date)}</p>
         </div>
         ${statusChip(e.status)}
       </div>
