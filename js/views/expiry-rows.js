@@ -10,7 +10,7 @@ export function expiryRowsHtml(items, ownerType, ownerId) {
     return `
       <div class="expiry-row" id="row-${it.key}" data-key="${it.key}">
         <div class="expiry-head">
-          <label class="expiry-label" for="exp_${it.key}">${esc(it.label)}</label>
+          <label class="expiry-label" for="exp_${it.key}">${esc(it.label)}${it.hint ? ` <small class="muted">· ${esc(it.hint)}</small>` : ''}</label>
           <span class="expiry-status">${chipFor(val)}</span>
         </div>
         <div class="expiry-body">
