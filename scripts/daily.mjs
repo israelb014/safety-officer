@@ -1,6 +1,6 @@
 // Daily job (GitHub Actions): builds ONE digest of everything that needs attention,
 // sends it to ntfy, logs it, and cleans up old archived documents.
-// Node 20+, no npm dependencies.
+// Node 20+ (CI runs Node 22), no npm dependencies.
 //
 // Env: SUPABASE_URL, SUPABASE_SERVICE_KEY (required)
 //      NTFY_TOPIC (optional fallback if settings.ntfy_topic is empty)
